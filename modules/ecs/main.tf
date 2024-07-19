@@ -1,46 +1,3 @@
-resource "aws_ecs_cluster" "main" {
-  name = "ecommerce-cluster"
-}
-
-resource "aws_iam_role" "ecs_task_execution" {
-  name = "ecsTaskExecutionRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action    = "sts:AssumeRole",
-      Effect    = "Allow",
-      Principal = {
-        Service = "ecs-tasks.amazonaws.com"
-      }
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  role       = aws_iam_role.ecs_task_execution.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
-resource "aws_ecs_task_definition" "app" {
-  family                   = "ecommerce-task"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-
-  container_definitions = jsonencode([{
-    name  = "ecommerce-app"
-    image = "nginx:latest"
-    essential = true
-    portMappings = [{
-      containerPort = 80
-      hostPort      = 80
-    }]
-  }])
-}
-
 resource "aws_lb" "main" {
   name               = "ecommerce-lb"
   internal           = false
@@ -49,7 +6,15 @@ resource "aws_lb" "main" {
   subnets            = var.subnet_ids
 }
 
-resource "aws_lb_listener" "http" {
+resource "aws_lb_target_group" "main" {
+  name        = "ecommerce-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+}
+
+resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.main.arn
   port              = "80"
   protocol          = "HTTP"
@@ -60,21 +25,45 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-resource "aws_lb_target_group" "main" {
-  name        = "ecommerce-tg"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "ip"
+resource "aws_security_group" "lb" {
+  vpc_id = var.vpc_id
 
-  health_check {
-    path                = "/"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    matcher             = "200"
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_ecs_cluster" "main" {
+  name = "ecommerce-cluster"
+}
+
+resource "aws_ecs_task_definition" "app" {
+  family                   = "ecommerce-task"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = var.ecs_task_execution_role_arn
+
+  container_definitions = jsonencode([{
+    name  = "ecommerce-app"
+    image = "nginx:latest"
+    essential = true
+    portMappings = [{
+      containerPort = 80
+      hostPort      = 80
+    }]
+  }])
 }
 
 resource "aws_ecs_service" "app" {
@@ -139,24 +128,6 @@ resource "aws_appautoscaling_policy" "scale_down" {
   }
 }
 
-resource "aws_security_group" "lb" {
-  vpc_id = var.vpc_id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 resource "aws_security_group" "ecs" {
   vpc_id = var.vpc_id
 
@@ -177,4 +148,16 @@ resource "aws_security_group" "ecs" {
 
 output "ecs_cluster_id" {
   value = aws_ecs_cluster.main.id
+}
+
+output "alb_dns_name" {
+  value = aws_lb.main.dns_name
+}
+
+output "alb_arn" {
+  value = aws_lb.main.arn
+}
+
+output "alb_target_group_arn" {
+  value = aws_lb_target_group.main.arn
 }
