@@ -49,7 +49,6 @@ resource "aws_db_subnet_group" "main" {
 }
 
 resource "aws_db_instance" "user_db" {
-  identifier             = "user-db-instance"
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
@@ -66,7 +65,6 @@ resource "aws_db_instance" "user_db" {
 }
 
 resource "aws_db_instance" "product_db" {
-  identifier             = "product-db-instance"
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
@@ -83,7 +81,6 @@ resource "aws_db_instance" "product_db" {
 }
 
 resource "aws_db_instance" "inventory_db" {
-  identifier             = "inventory-db-instance"
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
