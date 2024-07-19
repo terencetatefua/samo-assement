@@ -52,7 +52,7 @@ resource "aws_db_instance" "user_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
-  engine_version         = "8.0.35"
+  engine_version         = "8.0.25"
   instance_class         = "db.t3.micro"
   db_name                = "userdb"
   username               = jsondecode(data.aws_secretsmanager_secret_version.db_user_secret.secret_string)["username"]
@@ -61,13 +61,14 @@ resource "aws_db_instance" "user_db" {
   publicly_accessible    = false
   vpc_security_group_ids = [aws_security_group.rds.id]
   db_subnet_group_name   = aws_db_subnet_group.main.name
+  skip_final_snapshot    = true
 }
 
 resource "aws_db_instance" "product_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
-  engine_version         = "8.0.35"
+  engine_version         = "8.0.25"
   instance_class         = "db.t3.micro"
   db_name                = "productdb"
   username               = jsondecode(data.aws_secretsmanager_secret_version.db_product_secret.secret_string)["username"]
@@ -76,13 +77,14 @@ resource "aws_db_instance" "product_db" {
   publicly_accessible    = false
   vpc_security_group_ids = [aws_security_group.rds.id]
   db_subnet_group_name   = aws_db_subnet_group.main.name
+  skip_final_snapshot    = true
 }
 
 resource "aws_db_instance" "inventory_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
-  engine_version         = "8.0.35"
+  engine_version         = "8.0.25"
   instance_class         = "db.t3.micro"
   db_name                = "inventorydb"
   username               = jsondecode(data.aws_secretsmanager_secret_version.db_inventory_secret.secret_string)["username"]
@@ -91,6 +93,7 @@ resource "aws_db_instance" "inventory_db" {
   publicly_accessible    = false
   vpc_security_group_ids = [aws_security_group.rds.id]
   db_subnet_group_name   = aws_db_subnet_group.main.name
+  skip_final_snapshot    = true
 }
 
 output "user_instance_endpoint" {
