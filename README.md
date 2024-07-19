@@ -29,6 +29,9 @@ ECS to DynamoDB: Allows ECS tasks to read from DynamoDB.
 -create secret in AWS secret manager. This configuration ensures that existing secrets are used to configure the RDS instances without creating new secrets through Terraform for security purposes
 -update username and password in rds module with appropriate aws secret manager details
 
+## Note
+-create the necessary IAM policies and roles so that the ECS inventory service has full DynamoDB access, while the product and user services have read-only access.
+
 1. **Clone the repository:**
 
    ```sh
@@ -41,10 +44,20 @@ ECS to DynamoDB: Allows ECS tasks to read from DynamoDB.
  ## Review and Apply the Terraform Plan:
 terraform plan
 terraform apply
+## cleanup
+- terraform destroy
 
 ### AWS cert
 - https://www.credly.com/badges/6824a2c5-4f33-4b49-8ea7-7f04b5ebf1fa/public_url
 - https://www.credly.com/badges/e9c3ecb9-3400-4c3d-b577-f05383532026
+
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.0 |
+
+
 ## Modules
 
 | Name | Source | Version |
@@ -52,6 +65,7 @@ terraform apply
 | <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | ./modules/api_gateway | n/a |
 | <a name="module_dynamodb"></a> [dynamodb](#module\_dynamodb) | ./modules/dynamodb | n/a |
 | <a name="module_ecs"></a> [ecs](#module\_ecs) | ./modules/ecs | n/a |
+| <a name="module_iam"></a> [iam](#module\_iam) | ./modules/iam | n/a |
 | <a name="module_kinesis"></a> [kinesis](#module\_kinesis) | ./modules/kinesis | n/a |
 | <a name="module_lambda"></a> [lambda](#module\_lambda) | ./modules/lambda | n/a |
 | <a name="module_rds"></a> [rds](#module\_rds) | ./modules/rds | n/a |
@@ -65,12 +79,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region to create resources in | `string` | `"us-east-2"` | no |
-| <a name="input_dynamodb_arn"></a> [dynamodb\_arn](#input\_dynamodb\_arn) | The ARN of the DynamoDB table | `string` | n/a | yes |
-| <a name="input_lambda_arn"></a> [lambda\_arn](#input\_lambda\_arn) | The ARN of the Lambda function | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region to deploy resources in | `string` | `"us-east-2"` | no |
-| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The IDs of the subnets | `list(string)` | n/a | yes |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC | `string` | n/a | yes |
 
 ## Outputs
 
@@ -79,9 +88,13 @@ No resources.
 | <a name="output_api_gateway_url"></a> [api\_gateway\_url](#output\_api\_gateway\_url) | The URL of the API Gateway |
 | <a name="output_dynamodb_table_arn"></a> [dynamodb\_table\_arn](#output\_dynamodb\_table\_arn) | The ARN of the DynamoDB table |
 | <a name="output_ecs_cluster_id"></a> [ecs\_cluster\_id](#output\_ecs\_cluster\_id) | The ID of the ECS cluster |
+| <a name="output_ecs_task_execution_role_arn"></a> [ecs\_task\_execution\_role\_arn](#output\_ecs\_task\_execution\_role\_arn) | The ARN of the ECS task execution role |
 | <a name="output_kinesis_stream_arn"></a> [kinesis\_stream\_arn](#output\_kinesis\_stream\_arn) | The ARN of the Kinesis stream |
 | <a name="output_lambda_arn"></a> [lambda\_arn](#output\_lambda\_arn) | The ARN of the Lambda function |
+| <a name="output_product_service_role_arn"></a> [product\_service\_role\_arn](#output\_product\_service\_role\_arn) | The ARN of the Product Service role |
 | <a name="output_rds_inventory_instance_endpoint"></a> [rds\_inventory\_instance\_endpoint](#output\_rds\_inventory\_instance\_endpoint) | The endpoint of the RDS instance for Inventory Service |
 | <a name="output_rds_product_instance_endpoint"></a> [rds\_product\_instance\_endpoint](#output\_rds\_product\_instance\_endpoint) | The endpoint of the RDS instance for Product Service |
 | <a name="output_rds_user_instance_endpoint"></a> [rds\_user\_instance\_endpoint](#output\_rds\_user\_instance\_endpoint) | The endpoint of the RDS instance for User Service |
+| <a name="output_subnet_ids"></a> [subnet\_ids](#output\_subnet\_ids) | The IDs of the subnets |
+| <a name="output_user_service_role_arn"></a> [user\_service\_role\_arn](#output\_user\_service\_role\_arn) | The ARN of the User Service role |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
