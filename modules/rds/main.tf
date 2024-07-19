@@ -52,7 +52,7 @@ resource "aws_db_instance" "user_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
-  engine_version         = "8.0.25"
+  engine_version         = "8.0.35"
   instance_class         = "db.t3.micro"
   db_name                = "userdb"
   username               = jsondecode(data.aws_secretsmanager_secret_version.db_user_secret.secret_string)["username"]
@@ -68,7 +68,7 @@ resource "aws_db_instance" "product_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
-  engine_version         = "8.0.25"
+  engine_version         = "8.0.35"
   instance_class         = "db.t3.micro"
   db_name                = "productdb"
   username               = jsondecode(data.aws_secretsmanager_secret_version.db_product_secret.secret_string)["username"]
@@ -84,7 +84,7 @@ resource "aws_db_instance" "inventory_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "mysql"
-  engine_version         = "8.0.25"
+  engine_version         = "8.0.35"
   instance_class         = "db.t3.micro"
   db_name                = "inventorydb"
   username               = jsondecode(data.aws_secretsmanager_secret_version.db_inventory_secret.secret_string)["username"]
