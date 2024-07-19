@@ -130,7 +130,7 @@ resource "aws_lb_listener" "main" {
 
 resource "aws_lb_target_group_attachment" "ecs_service" {
   target_group_arn = aws_lb_target_group.main.arn
-  target_id        = var.ecs_service_ip
+  target_id        = var.ecs_service_ip  # Ensure this is set to the correct IP
   port             = 80
 }
 
@@ -168,6 +168,10 @@ output "alb_target_group_arn" {
   value = aws_lb_target_group.main.arn
 }
 
-output "alb_zone_id" {
-  value = aws_lb.main.id
+output "alb_hosted_zone_id" {
+  value = aws_lb.main.zone_id
+}
+
+output "ecs_service_ip" {
+  value = aws_ecs_service.app.id  # Assuming this gives the ECS service IP
 }

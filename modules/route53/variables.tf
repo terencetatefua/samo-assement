@@ -8,7 +8,7 @@ variable "alb_dns_name" {
   type        = string
 }
 
-variable "alb_zone_id" {
-  description = "The Zone ID of the ALB"
+variable "alb_hosted_zone_id" {
+  description = "The Hosted Zone ID of the ALB"
   type        = string
 }

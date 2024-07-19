@@ -13,7 +13,7 @@ module "ecs" {
   ecs_task_execution_role_arn      = module.iam.ecs_task_execution_role_arn
   product_service_role_arn         = module.iam.product_service_role_arn
   user_service_role_arn            = module.iam.user_service_role_arn
-  ecs_service_ip                   = "YOUR_ECS_SERVICE_IP"  # Replace with actual value
+  ecs_service_ip                   = module.ecs.ecs_service_ip  # Use the output from the ECS module
 }
 
 module "dynamodb" {
@@ -50,10 +50,10 @@ module "cloudfront" {
 }
 
 module "route53" {
-  source       = "./modules/route53"
-  domain_name  = var.domain_name
-  alb_dns_name = module.ecs.alb_dns_name
-  alb_zone_id  = module.ecs.alb_zone_id
+  source             = "./modules/route53"
+  domain_name        = var.domain_name
+  alb_dns_name       = module.ecs.alb_dns_name
+  alb_hosted_zone_id = module.ecs.alb_hosted_zone_id
 }
 
 data "aws_elb_service_account" "main" {}
