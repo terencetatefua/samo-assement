@@ -32,8 +32,8 @@ ECS to DynamoDB: Allows ECS tasks to read from DynamoDB.
 1. **Clone the repository:**
 
    ```sh
-   git clone <repository_url>
-   cd ecommerce-flash-sale
+   git clone https://github.com/terencetatefua/samo-assement.git
+   cd samo-assement
 
 ## Setup
 ## Initialize Terraform:
