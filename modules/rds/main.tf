@@ -1,4 +1,3 @@
-# Fetch existing secrets for the User DB
 data "aws_secretsmanager_secret" "db_user" {
   name = "secret-rds-user-db"
 }
@@ -7,7 +6,6 @@ data "aws_secretsmanager_secret_version" "db_user_secret" {
   secret_id = data.aws_secretsmanager_secret.db_user.id
 }
 
-# Fetch existing secrets for the Product DB
 data "aws_secretsmanager_secret" "db_product" {
   name = "secret-rds-product-db"
 }
@@ -16,7 +14,6 @@ data "aws_secretsmanager_secret_version" "db_product_secret" {
   secret_id = data.aws_secretsmanager_secret.db_product.id
 }
 
-# Fetch existing secrets for the Inventory DB
 data "aws_secretsmanager_secret" "db_inventory" {
   name = "rds-inventory-db-secret"
 }
@@ -110,3 +107,4 @@ output "inventory_instance_endpoint" {
   description = "The endpoint of the RDS instance for Inventory Service"
   value       = aws_db_instance.inventory_db.endpoint
 }
+

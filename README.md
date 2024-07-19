@@ -1,19 +1,17 @@
 ## Introduction
 ## The architecture includes:
-
-API Gateway: To manage API requests. IAM Role for API Gateway to Invoke Lambda: The API Gateway has a permission to invoke the Lambda function.
-AWS Lambda: For executing business logic. IAM Policy for Lambda to Access DynamoDB: The Lambda function has a policy to access DynamoDB.
-Amazon Cognito: For user authentication.
-Amazon CloudFront: For CDN capabilities.
-Amazon ECS on Fargate: For running containerized microservices.
-Amazon RDS: For microservice databases.
-Amazon Kinesis/Kafka: For real-time streaming of order data.
-AWS Lambda/Kinesis Data Analytics: For real-time processing and updating inventory.
-Amazon DynamoDB: For inventory management.
-Application Load Balancer (ALB): For load balancing.
-Auto Scaling Groups: For dynamic traffic handling.
-IAM Policies and Roles
-This setup includes various IAM roles and policies to ensure secure access between different services:
+-Route 53 is used for DNS management.
+-CloudFront provides CDN capabilities.
+-API Gateway handles API requests.
+-Lambda functions handle backend logic.
+-ALB distributes traffic to ECS services.
+-ECS (Fargate) runs containerized microservices.
+-RDS provides relational databases for each microservice.
+-DynamoDB handles real-time data.
+-Kinesis manages real-time data streaming.
+-IAM roles and policies ensure secure access control.
+-Secrets Manager securely manages database credentials.
+- This setup includes various IAM roles and policies to ensure secure access between different services:
 
 Lambda to DynamoDB: Allows Lambda to access DynamoDB.
 API Gateway to Lambda: Allows API Gateway to invoke Lambda.
@@ -26,8 +24,12 @@ ECS to DynamoDB: Allows ECS tasks to read from DynamoDB.
 -Terraform and AWS CLI installed.
 -Update backend s3 with appropriate names
 -create s3 bucket for backend and dynamodb for state lock
--create secret in AWS secret manager. This configuration ensures that existing secrets are used to configure the RDS instances without creating new secrets through Terraform for security purposes
--update username and password in rds module with appropriate aws secret manager details
+-create secret in AWS secret manager. This configuration ensures that existing secrets are used to -configure the RDS instances without creating new secrets through Terraform for security purposes
+-update username and password in rds module with appropriate aws secret manager detail
+-Ensure to request a domain in AWS Route53
+-update the dns name to your name of choice
+-create record in your domain for cloudfront. e.g api.domian.com
+
 
 ## Note
 -create the necessary IAM policies and roles so that the ECS inventory service has full DynamoDB access, while the product and user services have read-only access.

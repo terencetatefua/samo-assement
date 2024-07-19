@@ -22,3 +22,8 @@ variable "user_service_role_arn" {
   description = "The ARN of the User Service role"
   type        = string
 }
+
+variable "ecs_service_ip" {
+  description = "The IP of the ECS service"
+  type        = string
+}
