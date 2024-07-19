@@ -89,5 +89,6 @@ resource "aws_security_group" "lambda" {
 }
 
 output "stream_arn" {
-  value = aws_kinesis_stream.order_stream.arn
+  description = "The ARN of the Kinesis stream"
+  value       = aws_kinesis_stream.order_stream.arn
 }

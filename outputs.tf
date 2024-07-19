@@ -1,5 +1,3 @@
-# outputs.tf in the root module
-
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = module.vpc.vpc_id
@@ -65,9 +63,14 @@ output "api_gateway_url" {
   value       = module.api_gateway.api_gateway_url
 }
 
+output "cloudfront_distribution_domain_name" {
+  description = "The domain name of the CloudFront distribution"
+  value       = module.cloudfront.cloudfront_distribution_domain_name
+}
+
 output "alb_dns_name" {
   description = "The DNS name of the ALB"
-  value       = module.ecs.alb_dns_name
+  value       = module.cloudfront.cloudfront_distribution_domain_name
 }
 
 output "alb_arn" {

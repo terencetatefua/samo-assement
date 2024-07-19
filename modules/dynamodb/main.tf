@@ -11,3 +11,5 @@ resource "aws_dynamodb_table" "inventory" {
 output "table_arn" {
   value = aws_dynamodb_table.inventory.arn
 }
+
+
