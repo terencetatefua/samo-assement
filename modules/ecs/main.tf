@@ -33,7 +33,7 @@ resource "aws_ecs_service" "app" {
     assign_public_ip = true
   }
   load_balancer {
-    target_group_arn = aws_lb_target_group.main.arn
+    target_group_arn = var.alb_target_group_arn
     container_name   = "ecommerce-app"
     container_port   = 80
   }
@@ -166,6 +166,6 @@ output "alb_hosted_zone_id" {
   value = aws_lb.main.zone_id
 }
 
-output "ecs_service_ip" {
-  value = aws_ecs_service.app.id  # Assuming this gives the ECS service IP
+output "ecs_security_group_id" {
+  value = aws_security_group.ecs.id
 }

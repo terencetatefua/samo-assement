@@ -23,7 +23,7 @@ variable "user_service_role_arn" {
   type        = string
 }
 
-variable "ecs_service_ip" {
-  description = "The IP of the ECS service"
+variable "alb_target_group_arn" {
+  description = "The ARN of the ALB target group"
   type        = string
 }

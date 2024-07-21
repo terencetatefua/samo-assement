@@ -13,7 +13,7 @@ module "ecs" {
   ecs_task_execution_role_arn      = module.iam.ecs_task_execution_role_arn
   product_service_role_arn         = module.iam.product_service_role_arn
   user_service_role_arn            = module.iam.user_service_role_arn
-  ecs_service_ip                   = module.ecs.ecs_service_ip  # Use the output from the ECS module
+  alb_target_group_arn             = module.ecs.alb_target_group_arn
 }
 
 module "dynamodb" {
@@ -21,9 +21,10 @@ module "dynamodb" {
 }
 
 module "rds" {
-  source     = "./modules/rds"
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.subnet_ids
+  source             = "./modules/rds"
+  vpc_id             = module.vpc.vpc_id
+  subnet_ids         = module.vpc.subnet_ids
+  security_groups    = [module.ecs.ecs_security_group_id]
 }
 
 module "lambda" {
