@@ -72,9 +72,6 @@ output "alb_hosted_zone_id" {
   value = module.ecs.alb_hosted_zone_id
 }
 
-output "ecs_service_ip" {
-  value = module.ecs.ecs_service_ip
-}
 
 output "alb_dns_name" {
   description = "The DNS name of the ALB"

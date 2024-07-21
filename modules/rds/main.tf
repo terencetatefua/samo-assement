@@ -26,10 +26,10 @@ resource "aws_security_group" "rds" {
   vpc_id = var.vpc_id
 
   ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 3306
+    to_port        = 3306
+    protocol       = "tcp"
+    security_groups = var.security_groups
   }
 
   egress {
@@ -108,3 +108,6 @@ output "inventory_instance_endpoint" {
   value       = aws_db_instance.inventory_db.endpoint
 }
 
+output "rds_security_group_id" {
+  value = aws_security_group.rds.id
+}
